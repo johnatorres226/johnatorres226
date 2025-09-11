@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="1600" height="420" viewBox="0 0 1600 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Matrix-style banner">
   <defs>
-    <!-- Neon green glow -->
+    <!-- Neon green glow (original) -->
     <filter id="green-glow" x="-100%" y="-100%" width="300%" height="300%">
       <feGaussianBlur stdDeviation="3" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
+    </filter>
+
+    <!-- Slightly stronger glow for headers -->
+    <filter id="green-glow-boost" x="-150%" y="-150%" width="400%" height="400%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2"  flood-color="#00ff7b" flood-opacity="0.9"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6"  flood-color="#00ff7b" flood-opacity="0.55"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#00ff7b" flood-opacity="0.3"/>
     </filter>
 
     <!-- Subtle scanlines -->
@@ -30,8 +37,25 @@
       /* Global */
       .bg { fill: #000; }
       .scanlines { fill: url(#scan); }
-      .title { font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; fill: #d1ffe5; }
-      .subtitle { font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; fill: #8affc7; }
+      .title, .subtitle {
+        font-family: "IBM Plex Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+        paint-order: stroke fill;           /* thicker, chunkier look */
+        stroke: #003300;
+      }
+      .title {
+        fill: #d1ffe5;
+        font-size: 64px;
+        font-weight: 900;                   /* bolder */
+        stroke-width: 3px;                  /* thicker outline */
+        letter-spacing: 0.5px;
+      }
+      .subtitle {
+        fill: #8affc7;
+        font-size: 28px;
+        font-weight: 800;
+        stroke-width: 2.5px;
+        letter-spacing: 0.25px;
+      }
 
       /* Rain */
       .col text {
@@ -39,7 +63,7 @@
         opacity: 0.8;
       }
       .head {
-        fill: #b4ffd8; /* brighter leading glyph */
+        fill: #b4ffd8;                      /* brighter leading glyph */
         opacity: 1;
       }
 
@@ -60,6 +84,9 @@
 
       /* Pixel hinting */
       text { shape-rendering: optimizeSpeed; }
+
+      /* Cursor blink */
+      @keyframes blink { 0%,49% {opacity:1} 50%,100% {opacity:0} }
     </style>
   </defs>
 
@@ -67,20 +94,8 @@
   <rect class="bg" width="1600" height="420"/>
   <rect class="scanlines" width="1600" height="420" opacity="0.25"/>
 
-  <!-- Matrix rain columns -->
+  <!-- Matrix rain columns (unchanged) -->
   <g class="rain">
-    <!-- Generate ~18 columns across the banner (x step ≈ 85–95) -->
-    <!-- Each column: a bright "head" glyph + a long faded tail -->
-    <!-- You can duplicate/adjust x, delays, and speed classes for more density -->
-
-    <!-- Column template:
-      <g class="col sN" style="animation-delay: Xs; transform: translateY(-100%);">
-        <text x="X" y="0" class="head" font-size="26">X</text>
-        <text x="X" y="28" font-size="22"><tspan>…</tspan></text>
-        <use href="#glyphs" x="X-4" y="56" width="1" height="1" />
-      </g>
-    -->
-
     <g class="col s3" style="animation-delay: 0.2s; transform: translateY(-100%);">
       <text x="80" y="0" class="head" font-size="26">7</text>
       <text x="80" y="28" font-size="22">NQｱ9KZ</text>
@@ -184,15 +199,45 @@
     </g>
   </g>
 
-  <!-- Headline + Tagline (larger fonts) -->
-  <g filter="url(#green-glow)">
-    <text x="50%" y="45%" text-anchor="middle" class="title"
-          font-size="64" font-weight="800">
-      Welcome to my profile!
+  <!-- Typed Headline + Tagline (bolder + extra glow) -->
+  <g filter="url(#green-glow-boost)">
+    <!-- Title typing via clip-rect -->
+    <clipPath id="clip-title">
+      <!-- Start at x=150; animate width to reveal full centered text -->
+      <rect id="title-clip" x="150" y="138" width="0" height="72" rx="2"/>
+    </clipPath>
+    <text x="50%" y="45%" text-anchor="middle" class="title">
+      <tspan clip-path="url(#clip-title)">Welcome to my profile!</tspan>
     </text>
-    <text x="50%" y="68%" text-anchor="middle" class="subtitle"
-          font-size="28" font-weight="600">
-      My interest within Data Science, ETL, and Creative Analytics.
+    <!-- Blinking cursor for title -->
+    <rect id="cursor-title" x="150" y="150" width="18" height="46" fill="#b4ffd8" opacity="1">
+      <animate attributeName="opacity" values="1;0;1" dur="0.9s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Animate typing (adjust width if you change text) -->
+    <animate xlink:href="#title-clip" attributeName="width"
+             values="0;1200" dur="2.4s" calcMode="linear" fill="freeze"/>
+    <!-- Move cursor with typing -->
+    <animate xlink:href="#cursor-title" attributeName="x"
+             values="150;1350" dur="2.4s" calcMode="linear" fill="freeze"/>
+    <!-- Hide cursor after done -->
+    <set xlink:href="#cursor-title" attributeName="opacity" to="0" begin="2.4s" fill="freeze"/>
+
+    <!-- Subtitle typing (begins right after title starts; slight delay if you want) -->
+    <clipPath id="clip-sub">
+      <rect id="sub-clip" x="200" y="248" width="0" height="56" rx="2"/>
+    </clipPath>
+    <text x="50%" y="68%" text-anchor="middle" class="subtitle">
+      <tspan clip-path="url(#clip-sub)">My interest within Data Science, ETL, and Creative Analytics.</tspan>
     </text>
+    <!-- Cursor for subtitle -->
+    <rect id="cursor-sub" x="200" y="236" width="14" height="40" fill="#b4ffd8" opacity="0">
+      <animate attributeName="opacity" values="0;1;0;1" dur="1s" begin="0.2s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Animate typing for subtitle -->
+    <animate xlink:href="#sub-clip" attributeName="width"
+             values="0;1200" dur="3.1s" begin="0.25s" calcMode="linear" fill="freeze"/>
+    <animate xlink:href="#cursor-sub" attributeName="x"
+             values="200;1400" dur="3.1s" begin="0.25s" calcMode="linear" fill="freeze"/>
+    <set xlink:href="#cursor-sub" attributeName="opacity" to="0" begin="3.35s" fill="freeze"/>
   </g>
 </svg>
