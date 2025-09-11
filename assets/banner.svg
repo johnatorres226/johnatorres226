@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="1600" height="420" viewBox="0 0 1600 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Matrix-style banner">
+<svg
+  width="1600" height="420" viewBox="0 0 1600 420"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"   <!-- add this -->
+  role="img" aria-label="Matrix-style banner">
+
   <defs>
     <!-- Neon green glow -->
     <filter id="green-glow" x="-100%" y="-100%" width="300%" height="300%">
@@ -411,36 +416,38 @@
     </g>
   </g>
 
-  <!-- Typed Headline + Tagline (slower typing; cursor keeps blinking at end) -->
-  <g filter="url(#green-glow)">
-    <!-- Title typing via clip-rect -->
-    <clipPath id="clip-title">
-      <rect id="title-clip" x="150" y="138" width="0" height="72" rx="2"/>
-    </clipPath>
-    <text x="50%" y="45%" text-anchor="middle" class="title">
-      <tspan clip-path="url(#clip-title)">Welcome to my profile!</tspan>
-    </text>
-    <!-- Cursor for title (keeps blinking) -->
-    <rect id="cursor-title" x="150" y="150" width="18" height="46" fill="#b4ffd8">
-      <animate attributeName="opacity" values="1;0;1" dur="0.9s" repeatCount="indefinite"/>
-    </rect>
-    <!-- Slower typing -->
-    <animate xlink:href="#title-clip" attributeName="width" values="0;1200" dur="4.2s" fill="freeze"/>
-    <animate xlink:href="#cursor-title" attributeName="x" values="150;1350" dur="4.2s" fill="freeze"/>
+  <!-- Title typing via clip-rect -->
+<clipPath id="clip-title">
+  <rect id="title-clip" x="150" y="138" width="0" height="72" rx="2"/>
+</clipPath>
+<text x="50%" y="45%" text-anchor="middle" class="title">
+  <tspan clip-path="url(#clip-title)">Welcome to my profile!</tspan>
+</text>
 
-    <!-- Subtitle typing -->
-    <clipPath id="clip-sub">
-      <rect id="sub-clip" x="200" y="248" width="0" height="56" rx="2"/>
-    </clipPath>
-    <text x="50%" y="68%" text-anchor="middle" class="subtitle">
-      <tspan clip-path="url(#clip-sub)">My interest within Data Science, ETL, and Creative Analytics.</tspan>
-    </text>
-    <!-- Cursor for subtitle (keeps blinking) -->
-    <rect id="cursor-sub" x="200" y="236" width="14" height="40" fill="#b4ffd8">
-      <animate attributeName="opacity" values="1;0;1" dur="1s" begin="0.4s" repeatCount="indefinite"/>
-    </rect>
-    <!-- Slower typing; begins a bit after title starts -->
-    <animate xlink:href="#sub-clip" attributeName="width" values="0;1200" dur="5s" begin="0.6s" fill="freeze"/>
-    <animate xlink:href="#cursor-sub" attributeName="x" values="200;1400" dur="5s" begin="0.6s" fill="freeze"/>
-  </g>
+<!-- Cursor (keeps blinking) -->
+<rect id="cursor-title" x="150" y="150" width="18" height="46" fill="#b4ffd8">
+  <animate attributeName="opacity" values="1;0;1" dur="0.9s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Animate typing: use href instead of xlink:href -->
+<animate href="#title-clip" attributeName="width" values="0;1200" dur="4.2s" fill="freeze"/>
+<animate href="#cursor-title" attributeName="x" values="150;1350" dur="4.2s" fill="freeze"/>
+
+<!-- Subtitle -->
+<clipPath id="clip-sub">
+  <rect id="sub-clip" x="200" y="248" width="0" height="56" rx="2"/>
+</clipPath>
+<text x="50%" y="68%" text-anchor="middle" class="subtitle">
+  <tspan clip-path="url(#clip-sub)">My interest within Data Science, ETL, and Creative Analytics.</tspan>
+</text>
+
+<!-- Cursor (keeps blinking) -->
+<rect id="cursor-sub" x="200" y="236" width="14" height="40" fill="#b4ffd8">
+  <animate attributeName="opacity" values="1;0;1" dur="1s" begin="0.4s" repeatCount="indefinite"/>
+</rect>
+
+<!-- Animate typing: use href -->
+<animate href="#sub-clip" attributeName="width" values="0;1200" dur="5s" begin="0.6s" fill="freeze"/>
+<animate href="#cursor-sub" attributeName="x" values="200;1400" dur="5s" begin="0.6s" fill="freeze"/>
+
 </svg>
